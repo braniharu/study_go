@@ -6,6 +6,7 @@ type Flight interface {
 	Fly()
 }
 
+// werwe
 type Bird struct {
 }
 
