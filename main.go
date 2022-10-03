@@ -1,46 +1,33 @@
 package main
 
-import (
-	"errors"
-)
-
-type Bird struct {
-	Flight
-}
-
-type Airplane struct {
-	Flight
-}
+import "fmt"
 
 type Flight interface {
 	Fly()
 }
 
-func (bird Bird) Fly() error {
-	return errors.New("Ошибка полёта птицы")
+type Bird struct {
 }
 
-func (airplane Airplane) Fly() error {
-	return errors.New("Ошибка полёта самолёта")
+type Airplane struct {
 }
 
-func MakeFlight(flight Flight) error {
+func (bird Bird) Fly() {
+	fmt.Println("Птица летит")
+}
+
+func (airplane Airplane) Fly() {
+	fmt.Println("Самолёт летит")
+}
+
+func MakeFlight(flight Flight) {
 	flight.Fly()
-	return errors.New("Вызвана ошибка")
 }
 
 func main() {
-	//var bird Bird 
-	var airplane Airplane
-	MakeFlight(airplane.Flight)
-	//errOne := MakeFlight(bird.Flight)
-	//errTwo := MakeFlight(airplane.Flight)
-	////if errOne != nil {
-	////	fmt.Println("Птица: ", errOne)
-	////	return
-	////}
-	//if errTwo != nil {
-	//	fmt.Println(errTwo)
-	//	return
-	//}
+	bird := Bird{}
+	MakeFlight(bird)
+
+	airplane := Airplane{}
+	MakeFlight(airplane)
 }
