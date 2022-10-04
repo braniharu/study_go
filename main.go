@@ -1,34 +1,48 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type Flight interface {
-	Fly()
+	Fly() error
 }
 
-// werwe
-type Bird struct {
+func MakeFlight(flight Flight) error {
+	if flight.Fly() == nil {
+		return errors.New("функция принимает nil: ")
+	}
+	return errors.New("вызвана ошибка: ")
 }
 
-type Airplane struct {
+type Bird struct{}
+
+type Airplane struct{}
+
+func (bird Bird) Fly() error {
+	return errors.New("ошибка полёта птицы")
 }
 
-func (bird Bird) Fly() {
-	fmt.Println("Птица летит")
-}
-
-func (airplane Airplane) Fly() {
-	fmt.Println("Самолёт летит")
-}
-
-func MakeFlight(flight Flight) {
-	flight.Fly()
+func (airplane Airplane) Fly() error {
+	return errors.New("ошибка полёта самолёта")
 }
 
 func main() {
-	bird := Bird{}
-	MakeFlight(bird)
+	var parrot Bird
+	var boeing Airplane
 
-	airplane := Airplane{}
-	MakeFlight(airplane)
+	errOne := MakeFlight(parrot)
+	fmt.Println(errOne, parrot.Fly())
+	if errOne != nil {
+		fmt.Println(errOne, parrot.Fly())
+		return
+	}
+
+	errTwo := MakeFlight(boeing)
+	fmt.Println(errTwo, boeing.Fly())
+	if errTwo != nil {
+		fmt.Println(errTwo, boeing.Fly())
+		return
+	}
 }
