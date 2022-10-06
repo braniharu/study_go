@@ -1,48 +1,34 @@
 package main
 
 import (
-	"errors"
 	"fmt"
+	"time"
 )
 
-type Flight interface {
-	Fly() error
-}
+var Bird = [3]string{"Попугай", "Утка", "Ястреб"}
+var Airplane = []string{"Boeing", "British Aerospace", "EADS Socata", "Lancair"}
 
-func MakeFlight(flight Flight) error {
-	if flight.Fly() == nil {
-		return errors.New("функция принимает nil: ")
+func MakeFlightBird(Bird [3]string) {
+	for i := range Bird {
+		Bird[i] = Bird[i] + " летит"
+		fmt.Println(Bird[i])
 	}
-	return errors.New("вызвана ошибка: ")
 }
 
-type Bird struct{}
-
-type Airplane struct{}
-
-func (bird Bird) Fly() error {
-	return errors.New("ошибка полёта птицы")
-}
-
-func (airplane Airplane) Fly() error {
-	return errors.New("ошибка полёта самолёта")
+func MakeFlightAirplane(Airplane []string) {
+	for i := range Airplane {
+		Airplane[i] = Airplane[i] + " летит"
+		fmt.Println(Airplane[i])
+	}
 }
 
 func main() {
-	var parrot Bird
-	var boeing Airplane
+	//for i := range Bird {
+	//	go MakeFlightBird(Bird)
+	//}
+	go MakeFlightBird(Bird)
+	go MakeFlightAirplane(Airplane)
 
-	errOne := MakeFlight(parrot)
-	fmt.Println(errOne, parrot.Fly())
-	if errOne != nil {
-		fmt.Println(errOne, parrot.Fly())
-		return
-	}
-
-	errTwo := MakeFlight(boeing)
-	fmt.Println(errTwo, boeing.Fly())
-	if errTwo != nil {
-		fmt.Println(errTwo, boeing.Fly())
-		return
-	}
+	duration := time.Second
+	time.Sleep(duration)
 }
