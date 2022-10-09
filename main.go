@@ -40,10 +40,9 @@ func main() {
 		go MakeFlight(bird[i])
 	}
 
-	var airplane [2]Airplane
+	var airplane []Airplane = make([]Airplane, 2)
 	airplane[0] = Airplane{AirplaneName: "Boeing"}
 	airplane[1] = Airplane{AirplaneName: "British Aerospace"}
-
 	for i := range airplane {
 		go MakeFlight(airplane[i])
 	}
