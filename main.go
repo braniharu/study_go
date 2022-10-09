@@ -5,29 +5,48 @@ import (
 	"time"
 )
 
-var Bird = [3]string{"Попугай", "Утка", "Ястреб"}
-var Airplane = []string{"Boeing", "British Aerospace", "EADS Socata", "Lancair"}
-
-func MakeFlightBird(Bird [3]string) {
-	for i := range Bird {
-		Bird[i] = Bird[i] + " летит"
-		fmt.Println(Bird[i])
-	}
+type Flight interface {
+	Fly()
 }
 
-func MakeFlightAirplane(Airplane []string) {
-	for i := range Airplane {
-		Airplane[i] = Airplane[i] + " летит"
-		fmt.Println(Airplane[i])
-	}
+type Bird struct {
+	BirdName   string
+	BirdLenght float64
+}
+
+type Airplane struct {
+	AirplaneName string
+}
+
+func (bird Bird) Fly() {
+	fmt.Println(bird.BirdName, "летит c размахом крыла", bird.BirdLenght)
+}
+
+func (airplane Airplane) Fly() {
+	fmt.Println(airplane.AirplaneName, "летит")
+}
+
+func MakeFlight(flight Flight) {
+	flight.Fly()
 }
 
 func main() {
-	//for i := range Bird {
-	//	go MakeFlightBird(Bird)
-	//}
-	go MakeFlightBird(Bird)
-	go MakeFlightAirplane(Airplane)
+	var bird [3]Bird
+	bird[0] = Bird{BirdName: "Попугай", BirdLenght: 3.1}
+	bird[1] = Bird{BirdName: "Утка", BirdLenght: 2.8}
+	bird[2] = Bird{BirdName: "Ястреб", BirdLenght: 3.5}
+
+	for i := range bird {
+		go MakeFlight(bird[i])
+	}
+
+	var airplane [2]Airplane
+	airplane[0] = Airplane{AirplaneName: "Boeing"}
+	airplane[1] = Airplane{AirplaneName: "British Aerospace"}
+
+	for i := range airplane {
+		go MakeFlight(airplane[i])
+	}
 
 	duration := time.Second
 	time.Sleep(duration)
