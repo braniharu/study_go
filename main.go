@@ -43,6 +43,8 @@ func main() {
 	var airplane []Airplane = make([]Airplane, 2)
 	airplane[0] = Airplane{AirplaneName: "Boeing"}
 	airplane[1] = Airplane{AirplaneName: "British Aerospace"}
+	airplane = append(airplane, Airplane{AirplaneName: "\nFokker"})
+
 	for i := range airplane {
 		go MakeFlight(airplane[i])
 	}
