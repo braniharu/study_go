@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
 )
 
@@ -9,21 +10,40 @@ type Flight interface {
 	Fly()
 }
 
-type Bird struct {
-	BirdName   string
-	BirdLenght float64
-}
+type Bird struct{}
+type Airplane struct{}
 
-type Airplane struct {
-	AirplaneName string
-}
+var counter = 0
+var mutex sync.Mutex
 
 func (bird Bird) Fly() {
-	fmt.Println(bird.BirdName, "летит c размахом крыла", bird.BirdLenght)
+	for {
+		mutex.Lock()
+		counter++
+		fmt.Println("птица летит", counter)
+
+		if counter >= 25 {
+			counter = 0
+		}
+		mutex.Unlock()
+
+		break
+	}
 }
 
 func (airplane Airplane) Fly() {
-	fmt.Println(airplane.AirplaneName, "летит")
+	for {
+		mutex.Lock()
+		counter++
+		fmt.Println("самолёт летит", counter)
+
+		if counter >= 25 {
+			counter = 0
+		}
+		mutex.Unlock()
+
+		break
+	}
 }
 
 func MakeFlight(flight Flight) {
@@ -31,24 +51,16 @@ func MakeFlight(flight Flight) {
 }
 
 func main() {
-	var bird [3]Bird
-	bird[0] = Bird{BirdName: "Попугай", BirdLenght: 3.1}
-	bird[1] = Bird{BirdName: "Утка", BirdLenght: 2.8}
-	bird[2] = Bird{BirdName: "Ястреб", BirdLenght: 3.5}
+	var bird [1000]Bird
+	var airplane = make([]Airplane, 1000)
 
 	for i := range bird {
 		go MakeFlight(bird[i])
 	}
 
-	var airplane []Airplane = make([]Airplane, 2)
-	airplane[0] = Airplane{AirplaneName: "Boeing"}
-	airplane[1] = Airplane{AirplaneName: "British Aerospace"}
-	airplane = append(airplane, Airplane{AirplaneName: "\nLancair"})
-
-	for i := range airplane {
-		go MakeFlight(airplane[i])
+	for j := range airplane {
+		go MakeFlight(airplane[j])
 	}
 
-	duration := time.Second
-	time.Sleep(duration)
+	time.Sleep(time.Second * 2)
 }
